@@ -316,52 +316,15 @@
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
           notes = JSON.parse(stored);
-          // Calculate current max z-index
+          // 移除內建的範例便籤（starter_1, starter_2, starter_3），保留使用者自訂資料
+          notes = notes.filter(n => !['starter_1', 'starter_2', 'starter_3'].includes(n.id));
           if (notes.length > 0) {
             highestZ = Math.max(...notes.map(n => n.zIndex || 10), 10);
           }
-        } else {
-          // Default welcoming starter notes
-          notes = [
-            {
-              id: 'starter_1',
-              title: '👋 歡迎來到靈感看板',
-              content: '這是一個支援自由拖曳、客製顏色與本機儲存的便利貼工具！\n\n試著拖曳上方的紙膠帶區域移動我。',
-              color: 'yellow',
-              x: 80,
-              y: 60,
-              rotation: -1.5,
-              pinned: true,
-              zIndex: 11,
-              updatedAt: Date.now()
-            },
-            {
-              id: 'starter_2',
-              title: '💡 靈感與功能小技巧',
-              content: '• 點擊左下角色彩圓點更換配色\n• 雙擊或點擊圖釘固定位置\n• 點擊上方「整齊排列」快速排版\n• 支援中英文搜尋與標籤過濾！',
-              color: 'green',
-              x: 420,
-              y: 90,
-              rotation: 1.8,
-              pinned: false,
-              zIndex: 12,
-              updatedAt: Date.now() - 3600000
-            },
-            {
-              id: 'starter_3',
-              title: '🎯 今日目標',
-              content: '1. 完成視覺化設計稿\n2. 檢閱專案待辦清單\n3. 享受美好的午後咖啡時光 ☕',
-              color: 'pink',
-              x: 760,
-              y: 70,
-              rotation: -0.8,
-              pinned: false,
-              zIndex: 13,
-              updatedAt: Date.now() - 7200000
-            }
-          ];
-          highestZ = 13;
           saveNotes();
+        } else {
+          notes = [];
+          highestZ = 10;
         }
       } catch (err) {
         console.error('載入資料錯誤:', err);
